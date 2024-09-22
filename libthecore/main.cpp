@@ -1,7 +1,62 @@
 #include "stdafx.h"
 #include <iostream>
 
-int main()
+void test_buffer_get_byte()
+{
+    LPBUFFER buffer = buffer_new(10);
+    const char* testData = "abcdefghij"; // 10 bytes of test data
+    buffer_write(buffer, testData, 10); // Write 10 bytes to the buffer
+
+    buffer->read_point = buffer->mem_data; // Reset read point
+
+    BYTE byte = buffer_get_byte(buffer);
+    std::cout << "Read BYTE: " << (int)byte << std::endl; // Expect 'a' (97)
+
+    buffer_delete(buffer);
+}
+
+void test_buffer_get_word()
+{
+    LPBUFFER buffer = buffer_new(10);
+    const char* testData = "abcdefghij"; // 10 bytes of test data
+    buffer_write(buffer, testData, 10); // Write 10 bytes to the buffer
+
+    buffer->read_point = buffer->mem_data; // Reset read point
+
+    WORD word = buffer_get_word(buffer);
+    std::cout << "Read WORD: " << word << std::endl; // Expect 'ab' (25985 in little-endian)
+
+    buffer_delete(buffer);
+}
+
+void test_buffer_get_dword()
+{
+    LPBUFFER buffer = buffer_new(10);
+    const char* testData = "abcdefghij"; // 10 bytes of test data
+    buffer_write(buffer, testData, 10); // Write 10 bytes to the buffer
+
+    buffer->read_point = buffer->mem_data; // Reset read point
+
+    DWORD dword = buffer_get_dword(buffer);
+    std::cout << "Read DWORD: " << dword << std::endl; // Expect 'abcd' (1684234849 in little-endian)
+
+    buffer_delete(buffer);
+}
+
+int main() {
+    std::cout << "Testing buffer_get_byte:" << std::endl;
+    test_buffer_get_byte();
+
+    std::cout << "Testing buffer_get_word:" << std::endl;
+    test_buffer_get_word();
+
+    std::cout << "Testing buffer_get_dword:" << std::endl;
+    test_buffer_get_dword();
+
+    return 0;
+}
+
+/*int main()
 {
     setlocale(LC_ALL, "" );
     unsigned long seed = static_cast<unsigned long>(time(0));
@@ -18,7 +73,7 @@ int main()
     auto timeVal = timeval{ 5, 1 };
     thecore_sleep(&timeVal);
     return EXIT_SUCCESS;
-}
+}*/
 
 /*int main()
 {
