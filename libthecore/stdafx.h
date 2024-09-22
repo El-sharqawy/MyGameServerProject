@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #else
 #include <sys/time.h>
+//#define snprintf _snprintf
 #endif
 
 #define isutf8(ch)       (((ch) & 0x80) == 0 || ((ch) & 0xE0) == 0xC0 || ((ch) & 0xF0) == 0xE0 || ((ch) & 0xF8) == 0xF0)
@@ -33,6 +34,5 @@
 #define S_ISDIR(m)	(m & _S_IFDIR)
 #endif
 
-#define snprintf _snprintf
 
 #define PATH_MAX _MAX_PATH

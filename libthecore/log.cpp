@@ -91,7 +91,7 @@ void log_unset_level(unsigned int level)
  * @openMode: the mode which opening the file in.
  * @return: the new created & Initialized Log file.
  */
-LPLOGFILE log_file_init(const char *fileName, const char *openMode)
+LPLOGFILE log_file_init(const std::string& fileName, const std::string& openMode)
 {
     LPLOGFILE logFile = nullptr;
     FILE *fp = nullptr;;
@@ -101,7 +101,7 @@ LPLOGFILE log_file_init(const char *fileName, const char *openMode)
     time_string = time(0);
     currTime = *localtime(&time_string);
     
-    fp = fopen(fileName, openMode);
+    fp = fopen(fileName.c_str(), openMode.c_str());
 
     if (!fp)
     {
@@ -117,7 +117,7 @@ LPLOGFILE log_file_init(const char *fileName, const char *openMode)
         return (nullptr);
     }
 
-    logFile->filename = strdup(fileName);
+    logFile->filename = strdup(fileName.c_str());
     logFile->fp = fp;
     logFile->last_hour = currTime.tm_hour;
     logFile->last_day = currTime.tm_mday;
@@ -125,6 +125,11 @@ LPLOGFILE log_file_init(const char *fileName, const char *openMode)
     return (logFile);
 }
 
+/***
+ * log_file_destroy - Destroy a Log File & Free memory
+ * @logFile: a pointer to the Log file we want to destroy.
+ * @return: Nothing (void).
+ */
 void log_file_destroy(LPLOGFILE logFile)
 {
     if (logFile == nullptr)
@@ -147,6 +152,20 @@ void log_file_destroy(LPLOGFILE logFile)
     free(logFile);
 }
 
+void logs_rotate()
+{
+    log_file_check(log_file_syserr);
+    log_file_check(log_file_syslog);
+    log_file_check(log_file_pts);
+
+    log_file_rotate(log_file_syserr);
+}
+
+/***
+ * log_file_check - Check Log File
+ * @logFile: a pointer to the Log file we want to check.
+ * @return: Nothing (void).
+ */
 void log_file_check(LPLOGFILE logFile)
 {
     struct stat sb;
@@ -159,13 +178,23 @@ void log_file_check(LPLOGFILE logFile)
     }
 }
 
-void log_file_set_dir(const char *dir)
+/***
+ * log_file_set_dir - Set Log File Directory
+ * @dir: a string contains the logs directory name.
+ * @return: Nothing (void).
+ */
+void log_file_set_dir(const std::string& dir)
 {
-    strcpy(log_dir ,dir);
+    strcpy(log_dir ,dir.c_str());
     log_file_delete_old(log_dir);
 }
 
-void log_file_delete_old(const char *fileName)
+/***
+ * log_file_delete_old - Delete Old Log Files
+ * @fileName: a string contains the log file name to delete.
+ * @return: Nothing (void).
+ */
+void log_file_delete_old(const std::string& fileName)
 {
     struct stat sb;
     long num1 = 0, num2 = 0;
@@ -173,7 +202,7 @@ void log_file_delete_old(const char *fileName)
     char system_cmd[64]{};
     struct tm newTime;
 
-    if (stat(fileName, &sb) == -1)
+    if (stat(fileName.c_str(), &sb) == -1)
     {
         perror("log_file_delete_old: stat");
         return;
@@ -193,7 +222,7 @@ void log_file_delete_old(const char *fileName)
     HANDLE hFile = INVALID_HANDLE_VALUE;
     PVOID OldValue = NULL;
 
-    std::wstring newFileName = convertToWString(fileName);
+    std::wstring newFileName = convertToWString(fileName.c_str());
     if(Wow64DisableWow64FsRedirection(&OldValue))
     {
         hFile = FindFirstFileW(newFileName.c_str(), &fData);
@@ -217,12 +246,12 @@ void log_file_delete_old(const char *fileName)
                 }
             }
 
-            std::wstring newFileName = convertToWString(fileName);
+            std::wstring newFileName = convertToWString(fileName.c_str());
             num2 = wcstol(fData.cFileName, nullptr, 10);
             if (num2 <= num1)
             {
                 std::string narrowFileNameData = convertWCharToChar(fData.cFileName);
-                sprintf(system_cmd, "del %s\\%s", fileName, narrowFileNameData.c_str());
+                sprintf(system_cmd, "del %s\\%s", fileName.c_str(), narrowFileNameData.c_str());
                 system(system_cmd);
 
                 sys_log(0, "SYSTEM_CMD: %s", system_cmd);
@@ -273,6 +302,83 @@ void log_file_delete_old(const char *fileName)
 #endif
 }
 
+/***
+ * log_file_rotate - Rotate & Check log file and move/create and modify it
+ * @logFile: a pointer to the log file that will be checked.
+ * @return: Nothing (void.)
+ */
+void log_file_rotate(LPLOGFILE logFile)
+{
+    struct tm currTime;
+    time_t time_string;
+    char dir[128] = {0, };
+    char system_cmd[128] = { 0, };
+
+    time_string = time(0);
+    currTime = *localtime(&time_string);
+
+    if (currTime.tm_mday != logFile->last_day)
+    {
+        struct tm newTime;
+        newTime = *tm_calculate(&currTime, -log_keep_days);
+
+#if defined(_WIN64)
+        sprintf(system_cmd, "del %s\\%04d%02d%02d", log_dir, newTime.tm_year + 1900, newTime.tm_mon + 1, newTime.tm_mday);
+#else
+        sprintf(system_cmd, "rm -rf %s/%04d%02d%02d", log_dir, newTime.tm_year + 1900, newTime.tm_mon + 1, newTime.tm_mday);
+#endif
+        system(system_cmd);
+
+        sys_log(0, "SYSTEM_CMD: %s", system_cmd);
+        logFile->last_day = currTime.tm_mday;
+    }
+
+    if (currTime.tm_hour != logFile->last_hour)
+    {
+        struct stat stat_buf;
+        snprintf(dir, sizeof(system_cmd), "%s/%04d%02d%02d", log_dir, currTime.tm_year + 1900, currTime.tm_mon + 1, currTime.tm_mday);
+
+        if (stat(dir, &stat_buf) != 0 || S_ISDIR(stat_buf.st_mode))
+        {
+#if defined(_WIN64)
+            auto wcharDir = convertToWString(dir);
+            CreateDirectory(wcharDir.c_str(), nullptr);
+#else
+            mkdir(dir, S_IRWXU);
+#endif
+        }
+
+        sys_log(0, "SYSTEM: ROTATE LOG (%04d-%02d-%02d %d)", currTime.tm_year + 1900, currTime.tm_mon + 1, currTime.tm_mday, logFile->last_hour);
+
+        /*** Close the Log File ***/
+        fclose(logFile->fp);
+
+        /*** Move the log files ***/
+#if defined(_WIN64)
+        snprintf(system_cmd, sizeof(system_cmd), "move %s %s\\%s.%02d", logFile->filename, dir, logFile->filename, logFile->last_hour);
+#else
+        snprintf(system_cmd, sizeof(system_cmd), "mv %s %s/%s.%02d", logFile->filename, dir, logFile->filename, logFile->last_hour);
+#endif
+        /*** Ensure the string is null - terminated (not needed when using snprintf without underscore) ***/
+        //system_cmd[sizeof(system_cmd) - 1] = '\0';
+
+        system(system_cmd);
+
+        /*** Save last save time ***/
+        logFile->last_hour = currTime.tm_hour;
+
+        /*** Reopen Log File ***/
+        logFile->fp = fopen(logFile->filename, "+a");
+    }
+}
+
+/***
+ * _sys_err - Print to system Error Output Function.
+ * @func: the function name which have been calling this sys_err function.
+ * @line: the line in the file which the sys_err function have been called into.
+ * @format: a C string containing the text that will be printed to stderr.
+ * @return: Nothing (void).
+ */
 void _sys_err(const char *func, int line, const char *format, ...)
 {
     va_list args;
@@ -311,7 +417,7 @@ void _sys_err(const char *func, int line, const char *format, ...)
     if (len < 4096)
     {
         va_start(args, format);
-        vsnprintf(buf + len, 4096 - len, format, args);
+        vsnprintf(buf + len, 4096 - static_cast<size_t>(len), format, args);
         va_end(args);
     }
 
@@ -336,6 +442,13 @@ void _sys_err(const char *func, int line, const char *format, ...)
 }
 
 long lastSysLog = 0;
+
+/***
+ * sys_log - Print to system Logs Output Function.
+ * @level: the level of the log file printed line.
+ * @format: a C string containing the text that will be printed to stdout.
+ * @return: Nothing (void).
+ */
 void sys_log(unsigned int level, const char *format, ...)
 {
     va_list args;
@@ -405,6 +518,11 @@ void sys_log(unsigned int level, const char *format, ...)
 #endif
 }
 
+/***
+ * pts_log - Print to system Pts Output Function.
+ * @format: a C string containing the text that will be printed to Pts file.
+ * @return: Nothing (void).
+ */
 void pts_log(const char *format, ...)
 {
     va_list args;
