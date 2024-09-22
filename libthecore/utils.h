@@ -126,3 +126,12 @@ extern std::wstring convertToWString(const char *c);
 
 /*** converts wchar String into normal string to use in Windows ***/
 extern std::string convertWCharToChar(const std::wstring& wideStr);
+
+/*** get the time since booting the application in unsigned numbers (1000 = 1 second) ***/
+extern uint64_t get_unsigned_time();
+
+/*** get the time since booting the application in float numbers (1.000 = 1 second) ***/
+extern float get_float_time();
+
+/*** a function that pauses the whole core process for amount of time***/
+extern void thecore_sleep(struct timeval* timeout);

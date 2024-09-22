@@ -286,6 +286,11 @@ char *time_str(time_t curtime)
     /*** Example of this line time_s: Wed Sep 20 13:45:30 2024\n\0 ***/
     time_s = asctime(localtime(&curtime));
 
+    if (time_s == nullptr)
+    {
+        return (time_s);
+    }
+
     /*** trim last 6 characters (which is newline and the year) ***/
     time_s[strlen(time_s) - 6] = '\0';
 
@@ -296,6 +301,7 @@ char *time_str(time_t curtime)
     return (time_s);
 }
 
+#if defined(_WIN64)
 /***
  * gettimeofday - a function that gets the time of given struct.
  * @time: given time to calculate.
@@ -304,10 +310,12 @@ char *time_str(time_t curtime)
  */
 void gettimeofday(struct timeval* time, struct timezone *dummy)
 {
-    unsigned int uiMilliseconds = GetTickCount();
-    time->tv_sec = (uiMilliseconds / 1000);
-    time->tv_usec = (uiMilliseconds % 1000) * 1000;
+    uint64_t uiMilliseconds = GetTickCount64();
+    time->tv_sec = static_cast<long>((uiMilliseconds / 1000));
+    time->tv_usec = static_cast<long>((uiMilliseconds % 1000) * 1000);
 }
+#endif
+
 /***
  * timediff - a function that calculates the differnce between two given time structs and return it
  * @a: first time as base time
@@ -555,7 +563,6 @@ float fnumber_ex(float from, float to, const char *file, int line)
     return (randomNum);
 }
 
-// Convert char* to LPCWSTR
 /***
  * convertToWString - converts normal C String into wstring to use in Windows
  * @c: given normal C string to convert.
@@ -571,7 +578,6 @@ std::wstring convertToWString(const char *c)
     return text_wchar;
 }
 
-// Convert char* to LPCWSTR
 /***
  * convertWCharToChar - converts wchar String into normal string to use in Windows
  * @c: given normal wstring string to convert into string.
@@ -583,4 +589,66 @@ std::string convertWCharToChar(const std::wstring& wideStr)
     std::string narrowStr(size_needed, 0);
     WideCharToMultiByte(CP_UTF8, 0, wideStr.c_str(), -1, &narrowStr[0], size_needed, NULL, NULL);
     return narrowStr;
+}
+
+/***
+ * get_boot_second - calculate boot second of the application and return it in unsigned integer.
+ * @return: application boot time.
+ */
+static uint32_t get_boot_second()
+{
+    static struct timeval tv_boot = {0L, 0L};
+
+    if (tv_boot.tv_sec == 0)
+    {
+        gettimeofday(&tv_boot, nullptr);
+    }
+
+    return (tv_boot.tv_sec);
+}
+
+/***
+ * get_unsigned_time - get the time since booting the application in unsigned numbers (1000 = 1 second)
+ * @return: the time since the application have been booted.
+ */
+uint64_t get_unsigned_time()
+{
+    struct timeval timeVal;
+    gettimeofday(&timeVal, nullptr);
+    timeVal.tv_sec -= get_boot_second();
+    return (timeVal.tv_sec * 1000 + timeVal.tv_usec / 1000);
+}
+
+/***
+ * get_float_time - get the time since booting the application in float numbers (1.000 = 1 second)
+ * @return: the time since the application have been booted.
+ */
+float get_float_time()
+{
+    struct timeval timeVal;
+    gettimeofday(&timeVal, nullptr);
+    timeVal.tv_sec -= get_boot_second();
+    //return (static_cast<float>(timeVal.tv_sec * 1000 + timeVal.tv_usec / 1000));
+    return ((float)timeVal.tv_sec + ((float)timeVal.tv_usec / 1000000.0f));
+}
+
+/***
+ * thecore_sleep - a function that pauses the whole core process for amount of time
+ * @timeout: the amount of time to pause the application for.
+ * @return: Nothing (void.)
+ */
+void thecore_sleep(struct timeval* timeout)
+{
+#if defined(_WIN64)
+    Sleep(timeout->tv_sec * 1000 + timeout->tv_usec / 1000);
+#else
+    if (select(0, (fd_set*)0, (fd_set*)0, (fd_set*)0, timeout) < 0)
+    {
+        if (errno != EINTR)
+        {
+            sys_err("select sleep %s", strerror(errno));
+            return;
+        }
+    }
+#endif
 }

@@ -4,22 +4,21 @@
 int main()
 {
     setlocale(LC_ALL, "" );
-    const char* hello = "Testooooos";
-    std::wstring newFileName = convertToWString(hello);
-    wprintf(L"%ls\n", newFileName.c_str());  
-    auto testString = convertWCharToChar(newFileName);
-    printf("%s\n", testString.c_str());  
-
     unsigned long seed = static_cast<unsigned long>(time(0));
     srand(seed);
+
     if (!logs_init())
     {
         fprintf(stderr, "Failed to Initialize logs");
         return (EXIT_FAILURE);
     }
 
-    //delete[] newFileName;
-    //std::cin.get();
+    char ch;
+    do {
+        printf("%llu\n", get_unsigned_time());
+        printf("%.03f\n", get_float_time());
+        std::cin >> ch;
+    } while (ch != 'n');
     return EXIT_SUCCESS;
 }
 
