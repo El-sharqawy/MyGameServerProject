@@ -5,7 +5,7 @@
 typedef struct SBuffer
 {
 	/* Pointer to the next buffer in a linked list (used in pooling) */
-	TBuffer* next;
+	SBuffer* next;
 
 	/* Pointer to the current position where new data will be written */
 	char* write_point;
