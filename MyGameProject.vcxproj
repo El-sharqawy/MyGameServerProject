@@ -127,12 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="libthecore\buffer.cpp" />
     <ClCompile Include="libthecore\log.cpp" />
     <ClCompile Include="libthecore\main.cpp" />
     <ClCompile Include="libthecore\memcpy.cpp" />
     <ClCompile Include="libthecore\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libthecore\buffer.h" />
     <ClInclude Include="libthecore\log.h" />
     <ClInclude Include="libthecore\memcpy.h" />
     <ClInclude Include="libthecore\stdafx.h" />

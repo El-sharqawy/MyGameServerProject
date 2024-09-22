@@ -6,6 +6,7 @@
 #include "log.h"
 #include "memcpy.h"
 #include "typedef.h"
+#include "buffer.h"
 
 #include <cerrno>
 #include <cstdint>
@@ -14,6 +15,7 @@
 #include <cctype>  // For isprint
 #include <fstream>
 #include <memory>
+#include <cassert>
 #if defined(_WIN64)
 #define strdup _strdup
 #include <time.h>

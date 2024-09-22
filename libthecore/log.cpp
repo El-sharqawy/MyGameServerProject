@@ -20,7 +20,7 @@ static unsigned int log_level_bits = 0;
 
 /***
  * logs_init - Initialize Logs & Allocate Memory
- * @return: true on success, otherwise false.
+ * Return: true on success, otherwise false.
  */
 bool logs_init()
 {
@@ -54,7 +54,7 @@ bool logs_init()
 
 /***
  * logs_destroy - Destroy Logs & Free Memory
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void logs_destroy()
 {
@@ -69,7 +69,7 @@ void logs_destroy()
 
 /***
  * log_set_level - Set SysLog Level
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void log_set_level(unsigned int level)
 {
@@ -78,7 +78,7 @@ void log_set_level(unsigned int level)
 
 /***
  * log_unset_level - Unset SysLog Level
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void log_unset_level(unsigned int level)
 {
@@ -89,7 +89,7 @@ void log_unset_level(unsigned int level)
  * log_file_init - Initialize a Log File & Allocate memory and return it
  * @fileName: the name of the log file.
  * @openMode: the mode which opening the file in.
- * @return: the new created & Initialized Log file.
+ * Return: the new created & Initialized Log file.
  */
 LPLOGFILE log_file_init(const std::string& fileName, const std::string& openMode)
 {
@@ -128,7 +128,7 @@ LPLOGFILE log_file_init(const std::string& fileName, const std::string& openMode
 /***
  * log_file_destroy - Destroy a Log File & Free memory
  * @logFile: a pointer to the Log file we want to destroy.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void log_file_destroy(LPLOGFILE logFile)
 {
@@ -164,7 +164,7 @@ void logs_rotate()
 /***
  * log_file_check - Check Log File
  * @logFile: a pointer to the Log file we want to check.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void log_file_check(LPLOGFILE logFile)
 {
@@ -181,7 +181,7 @@ void log_file_check(LPLOGFILE logFile)
 /***
  * log_file_set_dir - Set Log File Directory
  * @dir: a string contains the logs directory name.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void log_file_set_dir(const std::string& dir)
 {
@@ -305,7 +305,7 @@ void log_file_delete_old(const std::string& fileName)
 /***
  * log_file_rotate - Rotate & Check log file and move/create and modify it
  * @logFile: a pointer to the log file that will be checked.
- * @return: Nothing (void.)
+ * Return: Nothing (void.)
  */
 void log_file_rotate(LPLOGFILE logFile)
 {
@@ -377,7 +377,7 @@ void log_file_rotate(LPLOGFILE logFile)
  * @func: the function name which have been calling this sys_err function.
  * @line: the line in the file which the sys_err function have been called into.
  * @format: a C string containing the text that will be printed to stderr.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void _sys_err(const char *func, int line, const char *format, ...)
 {
@@ -447,7 +447,7 @@ long lastSysLog = 0;
  * sys_log - Print to system Logs Output Function.
  * @level: the level of the log file printed line.
  * @format: a C string containing the text that will be printed to stdout.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void sys_log(unsigned int level, const char *format, ...)
 {
@@ -521,7 +521,7 @@ void sys_log(unsigned int level, const char *format, ...)
 /***
  * pts_log - Print to system Pts Output Function.
  * @format: a C string containing the text that will be printed to Pts file.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void pts_log(const char *format, ...)
 {

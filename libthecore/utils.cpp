@@ -9,7 +9,7 @@ static struct timeval null_time = {0, 0};
 /**
  * str_dup - Allocate memory, copy the source, and return it.
  * @source: source to copy from.
- * @return: the copied allocated memory characters.
+ * Return: the copied allocated memory characters.
  */
 char *str_dup(const char *source)
 {
@@ -22,7 +22,7 @@ char *str_dup(const char *source)
  * printData - Print data in both hex and ASCII (used for packet analysis, etc.)
  * @data: given data to print.
  * @bytes: number of bytes given.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  * 
  * Example of Usage : 
  * unsigned char data[] = {
@@ -92,7 +92,7 @@ void printData(const unsigned char *data, int bytes)
 /**
  * filesize - Returns given file size
  * @fp: given file.
- * @return: file size.
+ * Return: file size.
  */
 int filesize(FILE *fp)
 {
@@ -112,7 +112,7 @@ int filesize(FILE *fp)
  * @src: given string to parse.
  * @token: the token which will be extracted from the string.
  * @value: the value of the item which will be extracted as well.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void parse_token(char *src, char *token, char *value)
 {
@@ -154,7 +154,7 @@ void parse_token(char *src, char *token, char *value)
  * core_dump_unix - Dumping the Core Outputs
  * @who: the file name which the function have been called in.
  * @line: the line which this function have been called at.
- * @return: Nothing (void).
+ * Return: Nothing (void).
  */
 void core_dump_unix(const char *who, WORD line)
 {
@@ -177,7 +177,7 @@ void core_dump_unix(const char *who, WORD line)
  * @src: given string to trim and lower.
  * @dest: the result string to put the end-result into.
  * @dest_size: the size of the given result string.
- * @return: Nothing.
+ * Return: Nothing.
  */
 void trim_and_lower(char *src, char* dest, size_t dest_size)
 {
@@ -238,7 +238,7 @@ void trim_and_lower(char *src, char* dest, size_t dest_size)
  * @src: given string to trim and lower.
  * @dest: the result string to put the end-result into.
  * @dest_size: the size of the given result string.
- * @return: Nothing.
+ * Return: Nothing.
  */
 void lower_string(char *src, char* dest, size_t dest_size)
 {
@@ -278,7 +278,7 @@ void lower_string(char *src, char* dest, size_t dest_size)
  * time_str - a function that takes current time, modify and trim it
  * then return it as string.
  * @curtime: given current time.
- * @return: Current time as string.
+ * Return: Current time as string.
  */
 char *time_str(time_t curtime)
 {
@@ -306,7 +306,7 @@ char *time_str(time_t curtime)
  * gettimeofday - a function that gets the time of given struct.
  * @time: given time to calculate.
  * @dummy: a dummy parameter that is needed for Linux function.
- * @return: Nothing (void)
+ * Return: Nothing (void)
  */
 void gettimeofday(struct timeval* time, struct timezone *dummy)
 {
@@ -320,7 +320,7 @@ void gettimeofday(struct timeval* time, struct timezone *dummy)
  * timediff - a function that calculates the differnce between two given time structs and return it
  * @a: first time as base time
  * @b: the second time which will be used in the calculation from time A
- * @return: the result 
+ * Return: the result 
  */
 struct timeval *timediff(const struct timeval *a, const struct timeval *b)
 {
@@ -372,7 +372,7 @@ struct timeval *timediff(const struct timeval *a, const struct timeval *b)
  * timeadd - a function that adds the time of b to the time of a and returns it
  * @a: first time as base time
  * @b: the second time which will be used to be added to time A
- * @return: the result 
+ * Return: the result 
  */
 struct timeval *timeadd(struct timeval *a, struct timeval *b)
 {
@@ -395,7 +395,7 @@ struct timeval *timeadd(struct timeval *a, struct timeval *b)
  * tm_calculate - a function that returns the date that is 'days' days after the current time 'curr_tm'
  * @curr_tm: current time.
  * @days: number of days
- * @return: the new time calculated.
+ * Return: the new time calculated.
  */
 struct tm *tm_calculate(const struct tm* curr_tm, int days)
 {
@@ -485,7 +485,7 @@ struct tm *tm_calculate(const struct tm* curr_tm, int days)
 
 /***
  * thecore_random - generates an unsigned random number.
- * @return: the generated number.
+ * Return: the generated number.
  */
 unsigned int thecore_random()
 {
@@ -502,7 +502,7 @@ unsigned int thecore_random()
  * @to: the second number to generate to (maximum value).
  * @file: the name of the file which the function have been called at.
  * @line: the number of the line in the file which the function have been called at.
- * @return: the generated random number.
+ * Return: the generated random number.
  */
 int number_ex(int from, int to, const char *file, int line)
 {
@@ -540,7 +540,7 @@ int number_ex(int from, int to, const char *file, int line)
  * @to: the second number to generate to (maximum value).
  * @file: the name of the file which the function have been called at.
  * @line: the number of the line in the file which the function have been called at.
- * @return: the generated random number.
+ * Return: the generated random number.
  */
 float fnumber_ex(float from, float to, const char *file, int line)
 {
@@ -566,7 +566,7 @@ float fnumber_ex(float from, float to, const char *file, int line)
 /***
  * convertToWString - converts normal C String into wstring to use in Windows
  * @c: given normal C string to convert.
- * @return: a wstring that C string converted to and will be used.
+ * Return: a wstring that C string converted to and will be used.
  */
 std::wstring convertToWString(const char *c)
 {
@@ -581,7 +581,7 @@ std::wstring convertToWString(const char *c)
 /***
  * convertWCharToChar - converts wchar String into normal string to use in Windows
  * @c: given normal wstring string to convert into string.
- * @return: a string that is converted from wstring and will be used.
+ * Return: a string that is converted from wstring and will be used.
  */
 std::string convertWCharToChar(const std::wstring& wideStr)
 {
@@ -593,7 +593,7 @@ std::string convertWCharToChar(const std::wstring& wideStr)
 
 /***
  * get_boot_second - calculate boot second of the application and return it in unsigned integer.
- * @return: application boot time.
+ * Return: application boot time.
  */
 static uint32_t get_boot_second()
 {
@@ -609,19 +609,19 @@ static uint32_t get_boot_second()
 
 /***
  * get_unsigned_time - get the time since booting the application in unsigned numbers (1000 = 1 second)
- * @return: the time since the application have been booted.
+ * Return: the time since the application have been booted.
  */
 uint64_t get_unsigned_time()
 {
     struct timeval timeVal;
     gettimeofday(&timeVal, nullptr);
     timeVal.tv_sec -= get_boot_second();
-    return (timeVal.tv_sec * 1000 + timeVal.tv_usec / 1000);
+    return static_cast<uint64_t>((timeVal.tv_sec * 1000 + timeVal.tv_usec / 1000));
 }
 
 /***
  * get_float_time - get the time since booting the application in float numbers (1.000 = 1 second)
- * @return: the time since the application have been booted.
+ * Return: the time since the application have been booted.
  */
 float get_float_time()
 {
@@ -635,10 +635,11 @@ float get_float_time()
 /***
  * thecore_sleep - a function that pauses the whole core process for amount of time
  * @timeout: the amount of time to pause the application for.
- * @return: Nothing (void.)
+ * Return: Nothing (void.)
  */
 void thecore_sleep(struct timeval* timeout)
 {
+    /*** it takes the time in seconds (ex: Sleep(5)) ***/
 #if defined(_WIN64)
     Sleep(timeout->tv_sec * 1000 + timeout->tv_usec / 1000);
 #else

@@ -13,12 +13,10 @@ int main()
         return (EXIT_FAILURE);
     }
 
-    char ch;
-    do {
-        printf("%llu\n", get_unsigned_time());
-        printf("%.03f\n", get_float_time());
-        std::cin >> ch;
-    } while (ch != 'n');
+    printf("%llu\n", get_unsigned_time());
+    printf("%.03f\n", get_float_time());
+    auto timeVal = timeval{ 5, 1 };
+    thecore_sleep(&timeVal);
     return EXIT_SUCCESS;
 }
 
