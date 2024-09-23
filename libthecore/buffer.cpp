@@ -376,7 +376,7 @@ void buffer_realloc(LPBUFFER& buffer, int32_t iLength)
  *
  * Return: None
  */
-void buffer_write(LPBUFFER& buffer, const char* src, int32_t iLength)
+void buffer_write(LPBUFFER& buffer, const void* src, int32_t iLength)
 {
 	/* if the buffer actual write position and the given data length is equal or bigger than the allocated memory size */
 	if (buffer->write_point_pos + iLength >= buffer->mem_size)

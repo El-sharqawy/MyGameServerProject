@@ -51,7 +51,7 @@ extern void buffer_reset(LPBUFFER buffer);
 void buffer_realloc(LPBUFFER& buffer, int32_t iLength);
 
 /* Writes data to the buffer and reallocates if necessary */
-extern void buffer_write(LPBUFFER& buffer, const char* src, int32_t iLength);
+extern void buffer_write(LPBUFFER& buffer, const void* src, int32_t iLength);
 
 /* Returns the current write position in the buffer */
 extern void* buffer_write_peek(LPBUFFER buffer);
