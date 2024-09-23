@@ -49,25 +49,77 @@ void test_buffer_get_dword()
 
 int main()
 {
-    setlocale(LC_ALL, "");
-    unsigned long seed = static_cast<unsigned long>(time(0));
-    srand(seed);
-
-    if (!logs_init())
-    {
-        fprintf(stderr, "Failed to Initialize logs");
-        return (EXIT_FAILURE);
-    }
-
     // Example 1: Create a buffer from the pool
     std::cout << "Creating a new buffer with size 512" << std::endl;
     LPBUFFER buffer = buffer_new(512);
-    if (!buffer)
-    {
+    if (!buffer) {
         std::cerr << "Failed to create buffer!" << std::endl;
         return 1;
     }
 
+    // Example 2: Write to the buffer
+    const char* data = "Hello, this is a test!";
+    int dataLength = strlen(data);
+
+    std::cout << "Writing data to buffer..." << std::endl;
+    buffer_write(buffer, data, dataLength);
+
+    // Check the buffer content using the peek function
+    const char * writePoint = static_cast<const char*>(buffer_write_peek(buffer));
+
+    std::cout << "Peek into the write point: " << writePoint - 1 << std::endl;
+
+    // Example 3: Check remaining space in buffer
+    int remainingSpace = buffer_has_space(buffer);
+    std::cout << "Remaining space in buffer: " << remainingSpace << " bytes" << std::endl;
+
+    // Example 4: Read from the buffer
+    char readData[512];
+    std::cout << "Reading data from buffer..." << std::endl;
+    buffer_read(buffer, readData, dataLength);
+    readData[dataLength] = '\0';  // Null-terminate the read string
+
+    std::cout << "Data read from buffer: " << readData << std::endl;
+
+    // Example 5: Use buffer_get_byte, buffer_get_word, buffer_get_dword
+    std::cout << "Writing new data for byte, word, and dword testing" << std::endl;
+    const char* newData = "\x01\x02\x03\x04";  // Data: 0x01, 0x02, 0x03, 0x04
+    buffer_write(buffer, newData, 4);
+
+    // Reset buffer read/write points for reading
+    buffer_reset(buffer);
+
+    // Read byte
+    BYTE byteValue = buffer_get_byte(buffer);
+    std::cout << "BYTE value read from buffer: " << static_cast<int>(byteValue) << std::endl;
+
+    // Read word (2 bytes)
+    WORD wordValue = buffer_get_word(buffer);
+    std::cout << "WORD value read from buffer: " << wordValue << std::endl;
+
+    // Read dword (4 bytes)
+    DWORD dwordValue = buffer_get_dword(buffer);
+    std::cout << "DWORD value read from buffer: " << dwordValue << std::endl;
+
+    // Example 6: Adjust buffer size
+    std::cout << "Adjusting buffer size..." << std::endl;
+    buffer_adjust_size(buffer, 1024);  // Add 1024 bytes
+    std::cout << "Buffer size adjusted. New size: " << buffer->mem_size << std::endl;
+
+    // Example 7: Reuse buffer via pool
+    std::cout << "Deleting buffer and returning to pool..." << std::endl;
+    buffer_delete(buffer);
+
+    // Create a new buffer to reuse pooled memory
+    std::cout << "Creating a new buffer (pooled memory should be reused)" << std::endl;
+    buffer = buffer_new(512);
+    if (!buffer)
+    {
+        std::cerr << "Failed to create new buffer!" << std::endl;
+        return 1;
+    }
+
+    buffer_delete(buffer);
 
     return 0;
 }
