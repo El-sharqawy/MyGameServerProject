@@ -1,0 +1,28 @@
+SYSERR: Sep 23 20:29:20 :: buffer_new: iPoolIndex = 9
+SYSERR: Sep 23 20:29:20 :: buffer_new: Found Buffer in the pool!
+SYSERR: Sep 23 20:29:20 :: buffer_get_byte: buffer_get_byte: not enough data in buffer to read a BYTE
+SYSERR: Sep 23 20:29:20 :: buffer_get_word: buffer_get_word: not enough data in buffer to read a WORD
+SYSERR: Sep 23 20:29:20 :: buffer_get_dword: buffer_get_dword: not enough data in buffer to read a DWORD
+Sep 23 20:29:20.328000 [328000] :: buffer_adjust_size: 1024 size have been added to the buffer, current : 0/512
+SYSERR: Sep 23 20:29:20 :: buffer_new: iPoolIndex = 11
+SYSERR: Sep 23 20:29:20 :: buffer_new: Found Buffer in the pool!
+Sep 23 20:29:20.328000 [1000000] :: reallocating buffer to [2048], current [512]
+SYSERR: Sep 23 20:29:20 :: buffer_delete: iPoolIndex = 9
+SYSERR: Sep 23 20:29:20 :: buffer_delete: Found Buffer in the pool!
+SYSERR: Sep 23 20:29:20 :: buffer_delete: iPoolIndex = 11
+SYSERR: Sep 23 20:29:20 :: buffer_delete: Found Buffer in the pool!
+SYSERR: Sep 23 20:29:20 :: buffer_new: iPoolIndex = 9
+SYSERR: Sep 23 20:29:20 :: buffer_new: Found Buffer in the pool!
+SYSERR: Sep 23 20:29:20 :: buffer_delete: iPoolIndex = 9
+SYSERR: Sep 23 20:29:20 :: buffer_delete: Found Buffer in the pool!
+SYSERR: Sep 23 20:33:53 :: buffer_new: iPoolIndex = 9
+SYSERR: Sep 23 20:33:53 :: buffer_new: Found Buffer in the pool!
+SYSERR: Sep 23 20:33:53 :: buffer_get_byte: buffer_get_byte: not enough data in buffer to read a BYTE
+SYSERR: Sep 23 20:33:53 :: buffer_get_word: buffer_get_word: not enough data in buffer to read a WORD
+SYSERR: Sep 23 20:33:53 :: buffer_get_dword: buffer_get_dword: not enough data in buffer to read a DWORD
+Sep 23 20:33:53.46000 [46000] :: buffer_adjust_size: 1024 size have been added to the buffer, current : 0/512
+SYSERR: Sep 23 20:33:53 :: buffer_new: iPoolIndex = 11
+SYSERR: Sep 23 20:33:53 :: buffer_new: Found Buffer in the pool!
+Sep 23 20:33:53.62000 [16000] :: reallocating buffer to [2048], current [512]
+SYSERR: Sep 23 20:33:53 :: buffer_new: iPoolIndex = 9
+SYSERR: Sep 23 20:33:53 :: buffer_new: Found Buffer in the pool!

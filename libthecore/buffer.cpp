@@ -159,6 +159,7 @@ LPBUFFER buffer_new(int32_t iSize)
 	LPBUFFER buffer = nullptr;
 	/* etermine the index of the buffer pool that can accommodate a buffer of the requested size,
 	 * The function returns the index based on the size as a power of two (e.g., sizes of 1, 2, 4, 8, etc.)
+	 * if none is available with request size then create new one.
 	 */
 	int32_t iPoolIndex = buffer_get_pool_index(iSize);
 
@@ -377,10 +378,11 @@ void buffer_realloc(LPBUFFER& buffer, int32_t iLength)
  */
 void buffer_write(LPBUFFER& buffer, const char* src, int32_t iLength)
 {
-	/* if the buffer actual write position and the given data length is bigger than the allocated memory size */
+	/* if the buffer actual write position and the given data length is equal or bigger than the allocated memory size */
 	if (buffer->write_point_pos + iLength >= buffer->mem_size)
 	{
 		/* then reallocate the buffer to have a space for the new data to be written */
+		sys_log(0, "buffer_write: realloc buffer : write_point_pos [%d] + iLength [%d] >= mem_size [%d]", buffer->write_point_pos, iLength, buffer->mem_size);
 		buffer_realloc(buffer, buffer->mem_size + iLength + std::min<int32_t>(BUFFER_REALLOC_SIZE, iLength));
 	}
 
@@ -395,7 +397,8 @@ void buffer_write(LPBUFFER& buffer, const char* src, int32_t iLength)
  *
  * This function returns a pointer to the current position in the buffer
  * where the next write operation will begin. It does not modify the buffer,
- * but allows for inspection of the write point.
+ * but allows for inspection of the write point, which is usually empty point
+ * right after the last character.
  *
  * Return: A pointer to the current write position in the buffer.
  */

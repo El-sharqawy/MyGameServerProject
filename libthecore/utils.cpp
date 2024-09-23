@@ -3,7 +3,7 @@
 
 static struct timeval null_time = {0, 0};
 
-/*** check if the char in UTF-8 printable range or Having higher bits that match certain conditions (specifically, if the top 3 bits indicate a value greater than 0x90). ***/
+/*** check if the char in UTF-8 printable or just can be printed using "isprint" ***/
 #define isHexPrint(x)   (isutf8(x) || isprint(x))
 
 /**
@@ -94,9 +94,9 @@ void printData(const unsigned char *data, int bytes)
  * @fp: given file.
  * Return: file size.
  */
-int filesize(FILE *fp)
+int32_t filesize(FILE *fp)
 {
-    int pos, size;
+    int32_t pos, size;
 
     pos = ftell(fp);
     fseek(fp, 0, SEEK_END);
@@ -131,7 +131,7 @@ void parse_token(char *src, char *token, char *value)
         *(token++) = LOWER(*temp);
     }
 
-    /*** Add Null Terminator At the end of the token ***/
+    /*** make sure there's a Null Terminator At the end of the token ***/
     *token = '\0';
 
     /*** Loop Through Value starting from : + space after (+= 2) ***/
@@ -146,7 +146,7 @@ void parse_token(char *src, char *token, char *value)
         *(value++) = *temp;
     }
 
-    /*** Add Null Terminator At the end of the value ***/
+    /*** make sure there's a Null Terminator At the end of the value ***/
     *value = '\0';
 }
 
@@ -191,6 +191,7 @@ void trim_and_lower(char *src, char* dest, size_t dest_size)
 
     if (!src)
     {
+        /*** Add the null terminator to mark the end of the string ***/
         *dest = '\0';
         return;
     }
@@ -217,7 +218,7 @@ void trim_and_lower(char *src, char* dest, size_t dest_size)
         ++len;
     }
 
-    /*** Add the null terminator at the end ***/
+    /*** Add the null terminator to mark the end of the string ***/
     *dest = '\0';
 
     /*** Erase blank space at the end ***/
@@ -253,7 +254,7 @@ void lower_string(char *src, char* dest, size_t dest_size)
     /*** if the given string is null ***/
     if (!src)
     {
-        /*** make the destination string just empty string ***/
+        /*** Add the null terminator to mark the end of the string ***/
         *dest = '\0';
         return;
     }
@@ -269,7 +270,7 @@ void lower_string(char *src, char* dest, size_t dest_size)
         ++len;
     }
 
-    /*** Add the null terminator at the end ***/
+    /*** Add the null terminator to mark the end of the string ***/
     *dest = '\0';
 }
 

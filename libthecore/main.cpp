@@ -31,27 +31,43 @@ void test_buffer_get_word()
 
 void test_buffer_get_dword()
 {
-    LPBUFFER buffer = buffer_new(10);
-    const char* testData = "abcdefghij"; // 10 bytes of test data
-    buffer_write(buffer, testData, 10); // Write 10 bytes to the buffer
+    LPBUFFER buffer = buffer_new(33);
+
+    std::cout << "Read DWORD: " << buffer->mem_data << "Buffer Length : " << buffer->length << "sizeof dword : " << sizeof(DWORD) << std::endl; // Expect 'abcd' (1684234849 in little-endian)
+
+    const char* testData = "abcdefghijklmnopqrstuvwxyz"; // 10 bytes of test data
+
+    buffer_write(buffer, testData, 32); // Write 10 bytes to the buffer
 
     buffer->read_point = buffer->mem_data; // Reset read point
 
     DWORD dword = buffer_get_dword(buffer);
-    std::cout << "Read DWORD: " << dword << std::endl; // Expect 'abcd' (1684234849 in little-endian)
+    std::cout << "Read DWORD: " << buffer->mem_data << "Buffer Length : " << buffer->length << std::endl; // Expect 'abcd' (1684234849 in little-endian)
 
     buffer_delete(buffer);
 }
 
-int main() {
-    std::cout << "Testing buffer_get_byte:" << std::endl;
-    test_buffer_get_byte();
+int main()
+{
+    setlocale(LC_ALL, "");
+    unsigned long seed = static_cast<unsigned long>(time(0));
+    srand(seed);
 
-    std::cout << "Testing buffer_get_word:" << std::endl;
-    test_buffer_get_word();
+    if (!logs_init())
+    {
+        fprintf(stderr, "Failed to Initialize logs");
+        return (EXIT_FAILURE);
+    }
 
-    std::cout << "Testing buffer_get_dword:" << std::endl;
-    test_buffer_get_dword();
+    // Example 1: Create a buffer from the pool
+    std::cout << "Creating a new buffer with size 512" << std::endl;
+    LPBUFFER buffer = buffer_new(512);
+    if (!buffer)
+    {
+        std::cerr << "Failed to create buffer!" << std::endl;
+        return 1;
+    }
+
 
     return 0;
 }
