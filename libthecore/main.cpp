@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include <iostream>
 
-
 #define PLAYER_MAX_NAME 64
+
 enum Packets
 {
-    HEADER_GC_TEST = 1,
+    HEADER_GC_NONE,
+    HEADER_GC_TEST,
 };
 
 typedef struct SPacketGCTest
@@ -17,27 +18,26 @@ typedef struct SPacketGCTest
 int main()
 {
     // Create new Buffer
-    auto buffer = buffer_new(128);
-    if (!buffer)
-    {
-        std::cerr << "Failed to create new buffer!" << std::endl;
-        return (EXIT_FAILURE);
-    }
+    CTempBuffer buf;
 
-    TPacketGCTest testPack{};
+    TPacketGCTest testPack;
     testPack.iHeader = HEADER_GC_TEST;
     const char* playerName = "sharqawy";
     strncpy(testPack.szPlayerName, playerName, sizeof(testPack.szPlayerName));
 
-    buffer_write(buffer, &testPack, sizeof(testPack));
+    buf.Write(testPack, sizeof(testPack));
 
-    TPacketGCTest testPackReceived{};
-    buffer_read(buffer, &testPackReceived, sizeof(testPackReceived));
+    std::cout << "Buffer Size: " << buf.GetSize() << std::endl;
+
+    TPacketGCTest testPackReceived;
+    buf.Read(&testPackReceived, sizeof(testPackReceived));
 
     std::cout << "Header Num: " << testPackReceived.iHeader << std::endl;
     std::cout << "Header szPlayerName:: " << testPackReceived.szPlayerName << std::endl;
+    //buffer_write(buffer, str.c_str(), stringLen);
+
     // free the buffer before leaving the app
-    buffer_delete(buffer);
+    //buffer_delete(buffer);
 
     return (EXIT_SUCCESS);
 }

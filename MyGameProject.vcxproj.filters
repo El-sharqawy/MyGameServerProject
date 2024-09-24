@@ -30,6 +30,9 @@
     <ClCompile Include="libthecore\buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="libthecore\buffer_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libthecore\log.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="libthecore\buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libthecore\buffer_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

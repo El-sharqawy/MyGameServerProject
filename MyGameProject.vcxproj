@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="libthecore\buffer.cpp" />
+    <ClCompile Include="libthecore\buffer_manager.cpp" />
     <ClCompile Include="libthecore\log.cpp" />
     <ClCompile Include="libthecore\main.cpp" />
     <ClCompile Include="libthecore\memcpy.cpp" />
@@ -135,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libthecore\buffer.h" />
+    <ClInclude Include="libthecore\buffer_manager.h" />
     <ClInclude Include="libthecore\log.h" />
     <ClInclude Include="libthecore\memcpy.h" />
     <ClInclude Include="libthecore\stdafx.h" />

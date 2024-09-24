@@ -7,6 +7,7 @@
 #include "memcpy.h"
 #include "typedef.h"
 #include "buffer.h"
+#include "buffer_manager.h"
 
 #include <cerrno>
 #include <cstdint>
